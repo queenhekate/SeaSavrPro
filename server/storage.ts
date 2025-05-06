@@ -1,5 +1,7 @@
 import { users, type User, type InsertUser, 
-         type PollutionReport, pollutionReports } from "@shared/schema";
+         type PollutionReport, pollutionReports, type InsertPollutionReport } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -19,15 +21,11 @@ export interface IStorage {
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
-  private pollutionReports: Map<number, PollutionReport>;
   currentUserId: number;
-  currentReportId: number;
 
   constructor() {
     this.users = new Map();
-    this.pollutionReports = new Map();
     this.currentUserId = 1;
-    this.currentReportId = 1;
   }
 
   // User methods
@@ -48,48 +46,44 @@ export class MemStorage implements IStorage {
     return user;
   }
 
-  // Pollution report methods
+  // Pollution report methods - using PostgreSQL database
   async getAllPollutionReports(): Promise<PollutionReport[]> {
-    return Array.from(this.pollutionReports.values());
+    const reports = await db.select().from(pollutionReports);
+    return reports;
   }
 
   async getPollutionReport(id: number): Promise<PollutionReport | undefined> {
-    return this.pollutionReports.get(id);
+    const [report] = await db.select().from(pollutionReports).where(eq(pollutionReports.id, id));
+    return report || undefined;
   }
 
   async createPollutionReport(reportData: Omit<PollutionReport, 'id' | 'createdAt'>): Promise<PollutionReport> {
-    const id = this.currentReportId++;
-    const createdAt = new Date();
-    
-    const report: PollutionReport = {
-      id,
-      createdAt,
-      ...reportData
+    const insertData: InsertPollutionReport = {
+      ...reportData,
     };
     
-    this.pollutionReports.set(id, report);
+    const [report] = await db.insert(pollutionReports)
+      .values(insertData)
+      .returning();
+    
     return report;
   }
 
   async updatePollutionReport(id: number, data: Partial<PollutionReport>): Promise<PollutionReport | undefined> {
-    const existingReport = this.pollutionReports.get(id);
+    const [updatedReport] = await db.update(pollutionReports)
+      .set(data)
+      .where(eq(pollutionReports.id, id))
+      .returning();
     
-    if (!existingReport) {
-      return undefined;
-    }
-    
-    const updatedReport = {
-      ...existingReport,
-      ...data,
-      id // Ensure ID doesn't change
-    };
-    
-    this.pollutionReports.set(id, updatedReport);
-    return updatedReport;
+    return updatedReport || undefined;
   }
 
   async deletePollutionReport(id: number): Promise<boolean> {
-    return this.pollutionReports.delete(id);
+    const [deletedReport] = await db.delete(pollutionReports)
+      .where(eq(pollutionReports.id, id))
+      .returning();
+    
+    return !!deletedReport;
   }
 }
 
