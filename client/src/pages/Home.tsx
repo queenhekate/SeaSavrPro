@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { PollutionReport } from '@shared/schema';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'wouter';
 
 export default function Home() {
   const [selectedCoordinates, setSelectedCoordinates] = useState<{lat: number, lng: number} | null>(null);
@@ -65,9 +66,14 @@ export default function Home() {
       <Header />
       
       <main className="container mx-auto px-4 py-6 flex-grow">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-neutral-800">Report Marine Pollution</h2>
-          <p className="text-neutral-600">Help protect our oceans by reporting pollution incidents</p>
+        <div className="mb-6 flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold text-neutral-800">Report Marine Pollution</h2>
+            <p className="text-neutral-600">Help protect our oceans by reporting pollution incidents</p>
+          </div>
+          <Link href="/reports" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+            View All Reports
+          </Link>
         </div>
         
         <MapSection 
