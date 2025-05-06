@@ -190,8 +190,8 @@ export default function Contact() {
                   <MapPin className="h-6 w-6 text-blue-500 mr-4 mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Headquarters</h3>
-                    <p className="text-neutral-600">123 Ocean Avenue</p>
-                    <p className="text-neutral-600">San Francisco, CA 94111</p>
+                    <p className="text-neutral-600">888 Prospect Street</p>
+                    <p className="text-neutral-600">La Jolla, CA 92037</p>
                     <p className="text-neutral-600">United States</p>
                   </div>
                 </CardContent>
