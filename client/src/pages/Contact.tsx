@@ -179,7 +179,7 @@ export default function Contact() {
                   <Phone className="h-6 w-6 text-blue-500 mr-4 mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Phone</h3>
-                    <p className="text-neutral-600">+1 (555) 123-4567</p>
+                    <p className="text-neutral-600">619-752-4248</p>
                     <p className="text-neutral-600 text-sm">Monday-Friday, 9am-5pm PST</p>
                   </div>
                 </CardContent>
